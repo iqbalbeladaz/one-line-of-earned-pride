@@ -18,6 +18,7 @@ from pathlib import Path
 ENTRY = "After forty years of night shifts, the old janitor watched his daughter, in her nurse's whites, unlock the ward door he used to mop."
 
 MAX_CHARS = 240
+SENTENCE_END = ".!?"
 
 
 def entry_text() -> str:
@@ -26,6 +27,11 @@ def entry_text() -> str:
         raise ValueError(f"entry is {len(ENTRY)} chars, must be 1-{MAX_CHARS}")
     if ENTRY.strip() != ENTRY or "\n" in ENTRY or not ENTRY.strip():
         raise ValueError("entry must be one clean, non-empty line")
+    # The bounty is one line that lands in one read: exactly one
+    # sentence-terminating mark, and it must be the last character.
+    terminators = [c for c in ENTRY if c in SENTENCE_END]
+    if len(terminators) != 1 or ENTRY[-1] not in SENTENCE_END:
+        raise ValueError("entry must be exactly one sentence")
     return ENTRY
 
 
